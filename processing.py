@@ -31,7 +31,7 @@ test_data['MonthlyIncome'].fillna(train_median_income, inplace=True)
 # Fille NA values for num dependents with median
 
 train_data['NumberOfDependents'].fillna(train_data['NumberOfDependents'].median(), inplace=True)
-test_data['NumberOfDependents'].fillna(test_data['NumberOfDependents'].median(), inplace=True)
+test_data['NumberOfDependents'].fillna(train_data['NumberOfDependents'].median(), inplace=True)
 
 #---Scaling
 
