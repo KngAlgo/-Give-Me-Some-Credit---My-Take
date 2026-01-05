@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-train_data = pd.read_csv("cs-training.csv")
-test_data = pd.read_csv("cs-test.csv")
+train_data = pd.read_csv("data/cs-training.csv", index_col=0)
+test_data = pd.read_csv("data/cs-test.csv", index_col=0)
 
 #---Feature Engineering
 

@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
+import shap
 from processing import x_train, y_train, x_test, buffer
 
 import tensorflow as tf
+from tensorflow import keras
 from keras import Model, layers, Input
 from keras.callbacks import ModelCheckpoint
 
@@ -30,7 +32,7 @@ def credit_model():
 model = credit_model()
 
 checkpoint = ModelCheckpoint(
-    "credit_model.h5", 
+    "results/credit_model.h5", 
     save_best_only=True, 
     monitor='val_loss')
 
@@ -40,3 +42,22 @@ history = model.fit(
     batch_size=128, 
     validation_split=0.2, 
     callbacks=[checkpoint])
+
+#--- Model Interpretability
+
+loaded_model = keras.models.load_model("results/credit_model.h5")
+
+# Use KernelExplainer 
+print("Creating SHAP explainer")
+explainer = shap.KernelExplainer(loaded_model.predict, x_train[:50].values)
+
+print("Computing SHAP values")
+shap_values = explainer.shap_values(x_test[:50].values)
+
+# Create summary plot
+shap.summary_plot(shap_values, x_test[:50].values, show=False, feature_names=x_test.columns)
+
+import matplotlib.pyplot as plt
+
+plt.savefig('results/shap_summary.png', bbox_inches='tight', dpi=150)
+plt.close()
